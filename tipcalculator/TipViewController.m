@@ -7,6 +7,7 @@
 //
 
 #import "TipViewController.h"
+#import "SettingsViewController.h"
 
 @interface TipViewController ()
 
@@ -16,6 +17,7 @@
 @property (weak, nonatomic) IBOutlet UISegmentedControl *tipControl;
 - (IBAction)onTap:(id)sender;
 - (void)updateValues;
+- (void)onSettingsButton;
 
 @end
 
@@ -35,6 +37,13 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    [self setDefaultTip];
+    [self updateValues];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Settings" style:UIBarButtonItemStylePlain target:self action:@selector(onSettingsButton)];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [self setDefaultTip];
     [self updateValues];
 }
 
@@ -42,6 +51,12 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)setDefaultTip {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    float defaultTip = [defaults floatForKey:@"defaultTip"];
+    self.tipControl.selectedSegmentIndex = defaultTip;
 }
 
 - (IBAction)onTap:(id)sender {
@@ -57,6 +72,10 @@
     
     self.tipLabel.text = [NSString stringWithFormat:@"$%0.2f", tipAmount];
     self.totalLabel.text = [NSString stringWithFormat:@"$%0.2f", totalAmount];
+}
+
+- (void)onSettingsButton {
+    [self.navigationController pushViewController:[[SettingsViewController alloc] init] animated:YES];
 }
 
 @end
